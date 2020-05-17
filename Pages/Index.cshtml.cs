@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SkillTreeRazorPageBlogSample.Data;
 using X.PagedList;
@@ -19,10 +20,15 @@ namespace SkillTreeRazorPageBlogSample.Pages
             _context = context;
         }
 
-        public void OnGet(int? p)
+        public void OnGet(string keyword,int? p)
         {
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
-            Articles = _context.Articles.OrderBy(a=>a.CreateDate).Select(a => new ArticleDto()
+            var query = _context.Articles.AsQueryable();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(a => EF.Functions.Like(a.Body, $"%{keyword}%"));
+            }
+            Articles = query.OrderBy(a=>a.CreateDate).Select(a => new ArticleDto()
             {
                 Id = a.Id,
                 Content = a.Body,
@@ -31,6 +37,7 @@ namespace SkillTreeRazorPageBlogSample.Pages
                 CoverImage = a.CoverPhoto,
                 CreatedAt = a.CreateDate
             }).ToPagedList(pageIndex,5);
+            ViewData["keyword"] = keyword;
         }
 
         public void OnGetTag(string tag, int? p)
