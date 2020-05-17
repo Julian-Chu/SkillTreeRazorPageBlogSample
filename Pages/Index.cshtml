@@ -5,6 +5,7 @@
 
 }
 
+@addTagHelper *,SkillTreeRazorPageBlogSample
 
 <h1 class="my-4">
     Page Heading
@@ -20,7 +21,11 @@
             <div class="card-body">
                 <h2 class="card-title">@article.Title</h2>
                 <p class="card-text">@Html.Raw(article.Content)</p>
-                <a href="#" class="btn btn-primary">@article.Tags</a>
+                @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <keyword-tag tag=@tag></keyword-tag>
+                }
+                
             </div>
             <div class="card-footer text-muted">
                 @article.CreatedAt
