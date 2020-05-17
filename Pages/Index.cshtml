@@ -1,5 +1,10 @@
 ﻿@page "{handler?}/{tag?}"
 @using SkillTreeRazorPageBlogSample.Data
+@using SkillTreeRazorPageBlogSample.Helper
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using X.PagedList.Web.Common
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -35,11 +40,4 @@
     }
 
 <!-- Pagination -->
-<ul class="pagination justify-content-center mb-4">
-    <li class="page-item">
-        <a class="page-link" href="#">&larr; Older</a>
-    </li>
-    <li class="page-item disabled">
-        <a class="page-link" href="#">Newer &rarr;</a>
-    </li>
-</ul>
+@Html.PagedListPager(Model.Articles, page=>Url.Page("Index",new{p=page}), PagingOptionsHelper.FrontEnd)

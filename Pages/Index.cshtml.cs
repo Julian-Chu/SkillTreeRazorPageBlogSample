@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SkillTreeRazorPageBlogSample.Data;
+using X.PagedList;
 
 namespace SkillTreeRazorPageBlogSample.Pages
 {
@@ -13,7 +11,7 @@ namespace SkillTreeRazorPageBlogSample.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly RazorPageBlogContext _context;
-        public IList<ArticleDto> Articles { get; set; }
+        public IPagedList<ArticleDto> Articles { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, RazorPageBlogContext context)
         {
@@ -21,9 +19,10 @@ namespace SkillTreeRazorPageBlogSample.Pages
             _context = context;
         }
 
-        public void OnGet()
+        public void OnGet(int? p)
         {
-            Articles = _context.Articles.Select(a => new ArticleDto()
+            var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
+            Articles = _context.Articles.OrderBy(a=>a.CreateDate).Select(a => new ArticleDto()
             {
                 Id = a.Id,
                 Content = a.Body,
@@ -31,12 +30,13 @@ namespace SkillTreeRazorPageBlogSample.Pages
                 Title = a.Title,
                 CoverImage = a.CoverPhoto,
                 CreatedAt = a.CreateDate
-            }).ToList();
+            }).ToPagedList(pageIndex,5);
         }
 
-        public void OnGetTag(string tag)
+        public void OnGetTag(string tag, int? p)
         {
-            Articles = _context.Articles.Where(a=>a.Tags.Contains(tag)).Select(a => new ArticleDto()
+            var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
+            Articles = _context.Articles.Where(a => a.Tags.ToLower().Contains(tag.ToLower())).OrderBy(a=>a.CreateDate).Select(a => new ArticleDto()
             {
                 Id = a.Id,
                 Content = a.Body,
@@ -44,7 +44,7 @@ namespace SkillTreeRazorPageBlogSample.Pages
                 Title = a.Title,
                 CoverImage = a.CoverPhoto,
                 CreatedAt = a.CreateDate
-            }).ToList();
+            }).ToPagedList(pageIndex, 5);
         }
     }
 
