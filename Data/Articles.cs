@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SkillTreeRazorPageBlogSample.Data
 {
-    public class Article
+    public class Articles
     {
         public Guid Id { get; set; }
         [Required]

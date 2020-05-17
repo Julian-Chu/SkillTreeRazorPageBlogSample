@@ -10,12 +10,12 @@ namespace SkillTreeRazorPageBlogSample.Data
             
         }
 
-        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<Articles> Articles { get; set; }
         public virtual DbSet<TagCloud> TagCloud { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Article>(e => e.Property(x => x.Id).ValueGeneratedNever());
+            modelBuilder.Entity<Articles>(e => e.Property(x => x.Id).ValueGeneratedNever());
             modelBuilder.Entity<TagCloud>(e => e.Property(x => x.Id).ValueGeneratedNever());
         }
     }
