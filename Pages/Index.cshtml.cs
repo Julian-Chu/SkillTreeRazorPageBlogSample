@@ -33,6 +33,19 @@ namespace SkillTreeRazorPageBlogSample.Pages
                 CreatedAt = a.CreateDate
             }).ToList();
         }
+
+        public void OnGetKeywordTag(string tag)
+        {
+            Articles = _context.Articles.Where(a=>a.Tags.Contains(tag)).Select(a => new ArticleDto()
+            {
+                Id = a.Id,
+                Content = a.Body,
+                Tags = a.Tags,
+                Title = a.Title,
+                CoverImage = a.CoverPhoto,
+                CreatedAt = a.CreateDate
+            }).ToList();
+        }
     }
 
     public class ArticleDto
