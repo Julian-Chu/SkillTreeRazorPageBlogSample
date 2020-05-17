@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{handler?}/{tag?}"
 @using SkillTreeRazorPageBlogSample.Data
 @model IndexModel
 @{
@@ -22,10 +22,10 @@
                 <h2 class="card-title">@article.Title</h2>
                 <p class="card-text">@Html.Raw(article.Content)</p>
                 <partial name="_KeywordTag"  for="@article.Tags"></partial>
-@*                 @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries)) *@
-@*                 { *@
-@*                     <keyword-tag tag=@tag></keyword-tag> *@
-@*                 } *@
+                  @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries))
+                  {
+                      <keyword-tag tag=@tag></keyword-tag>
+                  }
                 
             </div>
             <div class="card-footer text-muted">

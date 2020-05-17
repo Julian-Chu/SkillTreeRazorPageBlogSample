@@ -20,17 +20,17 @@ namespace SkillTreeRazorPageBlogSample.Helper.Tag
             _urlHelperFactory = urlHelperFactory;
             _accessor = accessor;
         }
-        public string tag { get; set; }
+        public string Tag { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var actionContext = _accessor.ActionContext;
             var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
-            var link = urlHelper.Page("search");
+            var link = urlHelper.PageLink("index");
             output.TagName = "a";
-            output.Attributes.Add("href",$"{link.ToLower()}/{tag.ToLower()}");
+            output.Attributes.Add("href",$"{link.ToLower()}tag/{Tag}");
             output.Attributes.Add("class","btn btn-primary");
-            output.Content.SetContent(tag);
+            output.Content.SetContent(Tag);
         }
     }
 }

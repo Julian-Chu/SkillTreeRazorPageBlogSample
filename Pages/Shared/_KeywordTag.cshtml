@@ -5,7 +5,7 @@
         @foreach (var tag in Model.Split(',', StringSplitOptions.RemoveEmptyEntries))
         {
         <li class="d-inline p-1">
-           <a class="btn btn-dark" asp-page="index" asp-page-handler="keywordTag" asp-route-tag="@tag" >@tag</a>
+           <a class="btn btn-dark" asp-page="index" asp-page-handler="tag" asp-route-tag="@tag" >@tag</a>
         </li>
         }
     </ul>

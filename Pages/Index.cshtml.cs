@@ -34,7 +34,7 @@ namespace SkillTreeRazorPageBlogSample.Pages
             }).ToList();
         }
 
-        public void OnGetKeywordTag(string tag)
+        public void OnGetTag(string tag)
         {
             Articles = _context.Articles.Where(a=>a.Tags.Contains(tag)).Select(a => new ArticleDto()
             {
