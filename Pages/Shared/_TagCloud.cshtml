@@ -1,10 +1,10 @@
-@model IEnumerable<SkillTreeRazorPageBlogSample.Dtos.TagDto>
+@model IndexModel 
 <div class="card my-4">
     <h5 class="card-header">Tag Cloud</h5>
     <div class="card-body">
         <div>
             <ul class="list-unstyled mb-0">
-                @foreach (var tag in Model)
+                @foreach (var tag in Model.Tags)
                 {
                     <li style="display: inline-block">
                         <a asp-page="index" asp-page-handler="tag" asp-route-tag="@tag.Name">@($"{tag.Name}({tag.Amount})")</a>
