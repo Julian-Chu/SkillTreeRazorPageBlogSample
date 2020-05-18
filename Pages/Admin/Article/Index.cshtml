@@ -1,0 +1,61 @@
+﻿@page
+@model SkillTreeRazorPageBlogSample.Pages.Admin.Article.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "Article/_Layout";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].CoverPhoto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Articles[0].Tags)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Articles) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoverPhoto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tags)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
