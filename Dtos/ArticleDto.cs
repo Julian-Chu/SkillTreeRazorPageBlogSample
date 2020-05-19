@@ -11,7 +11,7 @@ namespace SkillTreeRazorPageBlogSample.Dtos
 
         public string Content
         {
-            get => _content.Substring(0, 20);
+            get => _content.Length>20?_content.Substring(0, 20):_content;
             set => _content = value;
         }
 
