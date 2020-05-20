@@ -1,4 +1,5 @@
 ﻿@page
+@using SkillTreeRazorPageBlogSample.Data
 @model SkillTreeRazorPageBlogSample.Pages.Admin.Article.EditModel
 
 @{
@@ -11,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Articles.Id" />
             <div class="form-group">
@@ -21,23 +22,27 @@
             </div>
             <div class="form-group">
                 <label asp-for="Articles.Body" class="control-label"></label>
-                <input asp-for="Articles.Body" class="form-control" />
+                <textarea asp-for="Articles.Body" class="form-control"></textarea>
                 <span asp-validation-for="Articles.Body" class="text-danger"></span>
             </div>
+            <div class="form-group" hidden>
+                <label asp-for="Articles.Tags" class="control-label"></label>
+                <input asp-for="Articles.Tags" class="form-control"  value="@Model.Articles.Tags"/>
+            </div>
             <div class="form-group">
-                <label asp-for="Articles.CoverPhoto" class="control-label"></label>
-                <input asp-for="Articles.CoverPhoto" class="form-control" />
-                <span asp-validation-for="Articles.CoverPhoto" class="text-danger"></span>
+                <label asp-for="CoverPhoto" class="control-label"></label>
+                <input asp-for="CoverPhoto" class="form-control" type="file"/>
+                <span asp-validation-for="CoverPhoto" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Articles.CreateDate" class="control-label"></label>
-                <input asp-for="Articles.CreateDate" class="form-control" />
+                <input asp-for="Articles.CreateDate" class="form-control datepicker" type="date"/>
                 <span asp-validation-for="Articles.CreateDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Articles.Tags" class="control-label"></label>
-                <input asp-for="Articles.Tags" class="form-control" />
-                <span asp-validation-for="Articles.Tags" class="text-danger"></span>
+                <label asp-for="Tags" class="control-label"></label>
+                <select class="form-control tags-select2" multiple="multiple" asp-for="Tags" asp-items="Model.Tags">
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -52,4 +57,23 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script> 
+    $(document).ready(function() {
+      $('.datepicker').pickadate({
+      today:'',
+      })
+    })
+    </script>
+    <script>
+    
+    $(document).ready(function() {
+        $('.tags-select2').select2({
+        tags:true,
+        });
+    
+        // data:@Model.Tags.Where(t=>t.Selected==true).Select((t,index)=>new {id = index, text = t.Value, selected = t.Selected}).ToArray()
+        <!--$('.tags-select2').val(@Model.Tags.Where(t=>t.Selected==true).Select((t,index)=>new {id = index, text = t.Value, selected = t.Selected}).ToArray());-->
+        // $('.tags-select2').select2().trigger('change');
+    });
+    </script>
 }
