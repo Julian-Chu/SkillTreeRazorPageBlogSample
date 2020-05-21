@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SkillTreeRazorPageBlogSample.Data;
 using SkillTreeRazorPageBlogSample.Dtos;
+using SkillTreeRazorPageBlogSample.Services;
 using X.PagedList;
 
 namespace SkillTreeRazorPageBlogSample.Pages
@@ -14,26 +14,26 @@ namespace SkillTreeRazorPageBlogSample.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly RazorPageBlogContext _context;
+        private readonly IArticleService _service;
 
         public IPagedList<ArticleDto> Articles { get; set; }
 
         //for TagCloud partial view
         public IEnumerable<TagDto> Tags { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger, RazorPageBlogContext context)
+        public IndexModel(ILogger<IndexModel> logger, IArticleService service)
         {
             _logger = logger;
-            _context = context;
+            _service = service;
             //for TagCloud partial view
-            Tags = _context.TagCloud.Select(t => new TagDto() {Name = t.Name, Amount = t.Amount})
-                .OrderByDescending(t => t.Amount);
+            Tags = _service.GetTagsByAmountDescending();
         }
+
 
         public void OnGet(string keyword, int? p)
         {
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
-            var query = _context.Articles.AsQueryable();
+            var query = _service.GetArticles();
             if (!string.IsNullOrEmpty(keyword))
             {
                 query = query.Where(a => EF.Functions.Like(a.Body, $"%{keyword}%"));
@@ -51,10 +51,11 @@ namespace SkillTreeRazorPageBlogSample.Pages
             ViewData["keyword"] = keyword;
         }
 
+
         public void OnGetTag(string tag, int? p)
         {
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
-            Articles = _context.Articles.Where(a => a.Tags.ToLower().Contains(tag.ToLower())).OrderBy(a => a.CreateDate)
+            Articles = _service.GetArticles().Where(a => a.Tags.ToLower().Contains(tag.ToLower())).OrderBy(a => a.CreateDate)
                 .Select(a => new ArticleDto()
                 {
                     Id = a.Id,

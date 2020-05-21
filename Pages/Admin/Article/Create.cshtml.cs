@@ -9,21 +9,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Internal;
 using SkillTreeRazorPageBlogSample.Data;
+using SkillTreeRazorPageBlogSample.Services;
 
 namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
 {
     public class CreateModel : PageModel
     {
-        private readonly SkillTreeRazorPageBlogSample.Data.RazorPageBlogContext _context;
+        private readonly IArticleService _service;
 
-        public CreateModel(SkillTreeRazorPageBlogSample.Data.RazorPageBlogContext context)
+        public CreateModel( IArticleService service)
         {
-            _context = context;
+            _service = service;
         }
 
         public IActionResult OnGet()
         {
-            Tags = _context.TagCloud.Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name}).ToList();
+            Tags = _service.GetTagsCloud().Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name}).ToList();
             return Page();
         }
 
@@ -42,15 +43,15 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
             Articles.Tags = String.Join(",", tags);
             foreach (var tag in tags)
             {
-                var tagCloud = _context.TagCloud.SingleOrDefault(t => t.Name == tag);
+                var tagCloud = _service.GetTag(tag);
                 if (tagCloud != null)
                 {
                     tagCloud.Amount++;
-                    _context.TagCloud.Update(tagCloud);
+                    _service.UpdateTagToTagCloud(tagCloud);
                 }
                 else
                 {
-                    _context.TagCloud.Add(new TagCloud() {Id = Guid.NewGuid(), Amount = 1, Name = tag});
+                    _service.AddTagToTagCloud(tag);
                 }
             }
 
@@ -60,10 +61,11 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
                 return Page();
             }
 
-            _context.Articles.Add(Articles);
-            await _context.SaveChangesAsync();
+            _service.AddArticle(Articles);
+            await _service.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
+
     }
 }

@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SkillTreeRazorPageBlogSample.Data;
+using SkillTreeRazorPageBlogSample.Services;
 
 namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
 {
     public class EditModel : PageModel
     {
-        private readonly SkillTreeRazorPageBlogSample.Data.RazorPageBlogContext _context;
+        private readonly IArticleService _service;
 
-        public EditModel(SkillTreeRazorPageBlogSample.Data.RazorPageBlogContext context)
+        public EditModel(IArticleService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [BindProperty] public Articles Articles { get; set; }
@@ -34,8 +35,8 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
                 return NotFound();
             }
 
-            Articles = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
-            Tags = await _context.TagCloud.Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name})
+            Articles = await _service.GetArticles().FirstOrDefaultAsync(m => m.Id == id);
+            Tags = await _service.GetTagsCloud().Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name})
                 .ToListAsync();
             var defaultTags = Articles.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(t => new SelectListItem() {Text = t, Value = t}).ToList();
@@ -65,7 +66,8 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
                 return Page();
             }
 
-            _context.Attach(Articles).State = EntityState.Modified;
+            var articles = Articles;
+            _service.MarkEntityModified(articles);
 
             try
             {
@@ -81,37 +83,37 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
                 var tagsToRemove = prevTags.Except(unchangedTags);
                 foreach (var tag in tagsToAdd)
                 {
-                    var tagCloud = _context.TagCloud.SingleOrDefault(t => t.Name == tag);
+                    var tagCloud = _service.GetTag(tag);
                     if (tagCloud != null)
                     {
                         tagCloud.Amount++;
-                        _context.TagCloud.Update(tagCloud);
+                        _service.UpdateTagToTagCloud(tagCloud);
                     }
                     else
                     {
-                        _context.TagCloud.Add(new TagCloud() {Id = Guid.NewGuid(), Amount = 1, Name = tag});
+                        _service.AddTagToTagCloud(tag);
                     }
                 }
 
                 foreach (var tag in tagsToRemove)
                 {
-                    var tagCloud = _context.TagCloud.SingleOrDefault(t => t.Name == tag);
+                    var tagCloud = _service.GetTag(tag);
                     if (tagCloud != null)
                     {
                         if (tagCloud.Amount >= 1)
                         {
                             tagCloud.Amount--;
-                            _context.TagCloud.Update(tagCloud);
+                            _service.UpdateTagToTagCloud(tagCloud);
                         }
                     }
                 }
 
                 Articles.Tags = string.Join(",", tags);
-                await _context.SaveChangesAsync();
+                await _service.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ArticlesExists(Articles.Id))
+                if (!_service.IsArticlesExists(Articles.Id))
                 {
                     return NotFound();
                 }
@@ -124,9 +126,6 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
             return RedirectToPage("./Index");
         }
 
-        private bool ArticlesExists(Guid id)
-        {
-            return _context.Articles.Any(e => e.Id == id);
-        }
+
     }
 }

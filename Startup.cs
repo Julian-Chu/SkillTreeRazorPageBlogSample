@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SkillTreeRazorPageBlogSample.Data;
+using SkillTreeRazorPageBlogSample.Pages;
+using SkillTreeRazorPageBlogSample.Services;
 
 namespace SkillTreeRazorPageBlogSample
 {
@@ -30,6 +32,7 @@ namespace SkillTreeRazorPageBlogSample
             services.AddDbContext<RazorPageBlogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IArticleService, ArticleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
