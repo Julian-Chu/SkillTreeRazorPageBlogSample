@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ using SkillTreeRazorPageBlogSample.Services;
 
 namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
 {
-    public class EditModel : PageModel
+    public class EditModel : ArticleFormModel
     {
         private readonly IArticleService _service;
 
@@ -21,11 +22,6 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
             _service = service;
         }
 
-        [BindProperty] public Articles Articles { get; set; }
-
-
-        [BindProperty] public IFormFile CoverPhoto { get; set; }
-        [BindProperty] public IEnumerable<SelectListItem> Tags { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
@@ -61,6 +57,7 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
         public async Task<IActionResult> OnPostAsync(IFormFile coverPhoto, IEnumerable<string> tags)
         {
             ModelState.Remove("Articles.CoverPhoto");
+            ModelState.Remove("CoverPhoto");
             if (!ModelState.IsValid)
             {
                 return Page();
