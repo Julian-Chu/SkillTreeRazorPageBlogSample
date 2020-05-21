@@ -15,6 +15,8 @@ namespace SkillTreeRazorPageBlogSample.Dtos
             set => _content = value;
         }
 
+        public string FullContent  => _content;
+
         public DateTime CreatedAt { get; set; }
         public string Tags { get; set; }
     }

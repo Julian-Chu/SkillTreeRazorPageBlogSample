@@ -1,7 +1,7 @@
 @model string
 @if (string.IsNullOrEmpty(Model) == false)
 {
-    <ul>
+    <ul style="padding-inline-start:0">
         @foreach (var tag in Model.Split(',', StringSplitOptions.RemoveEmptyEntries))
         {
             <li class="d-inline p-1">

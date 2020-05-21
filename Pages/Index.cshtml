@@ -4,6 +4,7 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    var i = 0;
 
 }
 
@@ -16,24 +17,66 @@
 
 <!-- Blog Post -->
 @foreach (var article in Model.Articles)
-    {
-        <div class="card mb-4">
-            <img class="card-img-top" src=@article.CoverImage alt="Card image cap">
-            <div class="card-body">
-                <h2 class="card-title">@article.Title</h2>
-                <p class="card-text">@Html.Raw(article.Content)</p>
-                <partial name="_KeywordTag"  for="@article.Tags"></partial>
-                  @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries))
-                  {
-                      <keyword-tag tag=@tag></keyword-tag>
-                  }
-                
+{
+    <div class="card mb-4">
+        <img class="card-img-top" src=@article.CoverImage alt="Card image cap">
+        <div class="card-body">
+            <h2 class="card-title">@article.Title</h2>
+            <div class="collapse show article@(i)">
+                <p class="card-text ">@Html.Raw(article.Content)</p>
             </div>
-            <div class="card-footer text-muted">
-                @article.CreatedAt
+            <div class="collapse article@(i)">
+                <p class="card-text">@Html.Raw(article.FullContent)</p>
             </div>
+            <button type="button" class="btn btn-success read-more" data-toggle="collapse" data-target=".article@(i)" aria-expanded="false"
+                    aria-controls=".article@(i)">
+                Read more
+            </button>
+            <hr/>
+            @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries))
+            {
+                <keyword-tag tag=@tag></keyword-tag>
+            }
+            <hr/>
+            <partial name="_KeywordTag" for="@article.Tags"></partial>
         </div>
-    }
-
+        <hr/>
+        <div class="card-footer text-muted">
+            @article.CreatedAt
+        </div>
+    </div>
+    i++;
+}
+<p>
+    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Link with href
+    </a>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Button with data-target
+    </button>
+</p>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+    </div>
+</div>
 <!-- Pagination -->
-@Html.PagedListPager(Model.Articles, page=>Url.Page("Index",new{p=page}), PagingOptionsHelper.FrontEnd)
+@Html.PagedListPager(Model.Articles, page => Url.Page("Index", new {p = page}), PagingOptionsHelper.FrontEnd)
+
+@section Scripts{
+    <script type="text/javascript">
+$(document).ready(function(){
+    console.log("ready")
+    
+ $('.read-more').on('click',function(){
+     console.log(this)
+     console.log($(this).text())
+     if($(this).text() === "Read more"){
+         $(this).text("Read less")
+     }else{
+         $(this).text("Read more")
+     }
+ })
+})
+</script>
+}
