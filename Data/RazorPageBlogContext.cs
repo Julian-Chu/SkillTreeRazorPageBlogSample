@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SkillTreeRazorPageBlogSample.Data
 {
-    public partial class RazorPageBlogContext:DbContext
+    public partial class RazorPageBlogContext : DbContext
     {
-        public RazorPageBlogContext(DbContextOptions<RazorPageBlogContext> options):base(options)
+        public RazorPageBlogContext(DbContextOptions<RazorPageBlogContext> options) : base(options)
         {
-            
         }
 
         public virtual DbSet<Articles> Articles { get; set; }

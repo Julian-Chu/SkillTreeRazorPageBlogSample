@@ -55,7 +55,8 @@ namespace SkillTreeRazorPageBlogSample.Pages
         public void OnGetTag(string tag, int? p)
         {
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
-            Articles = _service.GetArticles().Where(a => a.Tags.ToLower().Contains(tag.ToLower())).OrderBy(a => a.CreateDate)
+            Articles = _service.GetArticles().Where(a => a.Tags.ToLower().Contains(tag.ToLower()))
+                .OrderBy(a => a.CreateDate)
                 .Select(a => new ArticleDto()
                 {
                     Id = a.Id,

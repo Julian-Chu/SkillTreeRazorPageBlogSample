@@ -7,8 +7,6 @@ using SkillTreeRazorPageBlogSample.Dtos;
 
 namespace SkillTreeRazorPageBlogSample.Services
 {
-
-
     public class ArticleService : IArticleService
     {
         private readonly RazorPageBlogContext _context;
@@ -17,6 +15,7 @@ namespace SkillTreeRazorPageBlogSample.Services
         {
             _context.Attach(articles).State = EntityState.Modified;
         }
+
         public ArticleService(RazorPageBlogContext context)
         {
             _context = context;
@@ -44,12 +43,12 @@ namespace SkillTreeRazorPageBlogSample.Services
             return this.GetTagsCloud().SingleOrDefault(t => t.Name == tag);
         }
 
-        public  void AddTagToTagCloud(string tag)
+        public void AddTagToTagCloud(string tag)
         {
             _context.TagCloud.Add(new TagCloud() {Id = Guid.NewGuid(), Amount = 1, Name = tag});
         }
 
-        public  void UpdateTagToTagCloud(TagCloud tagCloud)
+        public void UpdateTagToTagCloud(TagCloud tagCloud)
         {
             _context.TagCloud.Update(tagCloud);
         }

@@ -11,11 +11,11 @@ namespace SkillTreeRazorPageBlogSample.Dtos
 
         public string Content
         {
-            get => _content.Length>20?_content.Substring(0, 20):_content;
+            get => _content.Length > 20 ? _content.Substring(0, 20) : _content;
             set => _content = value;
         }
 
-        public string FullContent  => _content;
+        public string FullContent => _content;
 
         public DateTime CreatedAt { get; set; }
         public string Tags { get; set; }

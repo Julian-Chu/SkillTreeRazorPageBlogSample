@@ -77,7 +77,9 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
                     Articles.CoverPhoto = $"http://placehold.it/750x300?text={coverPhoto.FileName}";
                 }
 
-                var prevTags = string.IsNullOrEmpty(Articles.Tags)?new List<string>():Articles.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+                var prevTags = string.IsNullOrEmpty(Articles.Tags)
+                    ? new List<string>()
+                    : Articles.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
                 var unchangedTags = prevTags.Intersect(tags);
                 var tagsToAdd = tags.Except(unchangedTags);
                 var tagsToRemove = prevTags.Except(unchangedTags);
@@ -125,7 +127,5 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
 
             return RedirectToPage("./Index");
         }
-
-
     }
 }

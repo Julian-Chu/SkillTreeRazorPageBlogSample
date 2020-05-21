@@ -17,14 +17,15 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
     {
         private readonly IArticleService _service;
 
-        public CreateModel( IArticleService service)
+        public CreateModel(IArticleService service)
         {
             _service = service;
         }
 
         public IActionResult OnGet()
         {
-            Tags = _service.GetTagsCloud().Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name}).ToList();
+            Tags = _service.GetTagsCloud().Select(tag => new SelectListItem() {Text = tag.Name, Value = tag.Name})
+                .ToList();
             return Page();
         }
 
@@ -66,6 +67,5 @@ namespace SkillTreeRazorPageBlogSample.Pages.Admin.Article
 
             return RedirectToPage("./Index");
         }
-
     }
 }
