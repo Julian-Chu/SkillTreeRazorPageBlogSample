@@ -33,9 +33,12 @@
                 Read more
             </button>
             <hr/>
-            @foreach (var tag in article.Tags.Split(",", StringSplitOptions.RemoveEmptyEntries))
+            @if (article.Tags != null)
             {
-                <keyword-tag tag=@tag></keyword-tag>
+                foreach (var tag in article.Tags?.Split(",", StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <keyword-tag tag=@tag></keyword-tag>
+                }
             }
             <hr/>
             <partial name="_KeywordTag" for="@article.Tags"></partial>
